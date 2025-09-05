@@ -7,15 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.AuthService.dto.ApiResponse;
 import com.AuthService.dto.LoginDto;
 import com.AuthService.dto.UserDto;
 import com.AuthService.entity.User;
+import com.AuthService.repository.UserRepository;
 import com.AuthService.service.JWTService;
 import com.AuthService.service.UserService;
 
@@ -32,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private AuthenticationManager authManager;
+	
+	@Autowired
+	private UserRepository userRepository ;
 
 	@PostMapping("/register")
 	public ResponseEntity<ApiResponse<String>> registerUser(@Valid @RequestBody UserDto dto) {
@@ -72,4 +78,10 @@ public class UserController {
 		response.setStatus(500);
 		return new ResponseEntity<>(response,  HttpStatusCode.valueOf(response.getStatus()));
 	}
+	
+	
+	 @GetMapping("/get-user")
+	 public User getUser(@RequestParam String username) {
+		 return userRepository.findByUsername(username);
+	 }
 }
